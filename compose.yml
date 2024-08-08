@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  app:
+
+services:
+  node:
+    image: 'express:custom'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: express_container
+    volumes:
+      - ./:/usr/projects/app
+    ports:
+      - 3000:3000
+    networks:
+      - app
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo_container
+    ports:
+      - 27017:27017
+    volumes:
+      - app:/usr/projects/app/db
+    networks:
+      - app
+
