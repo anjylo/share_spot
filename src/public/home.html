@@ -3,9 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link href="/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <title>Home</title>
 </head>
+<style>
+    :root {
+        --custom: #13547a
+    }
+    .text-custom {
+        color: var(--custom);
+    }
+    .card-custom {
+        width: 14.2em;
+    }
+</style>
 <body>
+    <header>
+        <nav class="navbar border-bottom border-body mb-4" data-bs-theme="dark">
+            <div class="container-fluid">
+                <h4 class="card-title text-center m-0">Share<span class="text-custom">Spot</span></h4>
+                <a class="" href="/api/logout">
+                    Logout
+                </a>
+            </div>
+          </nav>
+    </header>
+
+    <!-- Modal -->
+    <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Launch demo modal
+    </button>
+  
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            ...
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        </div>
+    </div> -->
+
+    <main>
+        <div class="row mx-4">
+            <div class="col-auto pe-0 d-none d-md-block">
+                <div class="card card-custom p-3">
+                    <div class="d-flex flex-column">
+                        <img src="img/bust.jpg" class="align-self-center rounded img-fluid" id="picture">
+                        <a href="/user">
+                            <div class="card-title mt-2 mb-0 font-weight-bold text-capitalize" id="username"></div>
+                        </a>
+                        <div class="card-text font-italic text-muted" id="email"></div>
+
+                        <!-- <div>
+                            <a href="#">View Posts</a> | <a href="#"><i class="bi bi-plus-circle-fill"></i></a>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card d-flex px-3 py-2 mb-2">
+                    <div class="card-title font-weight-bold text-capitalize m-0">Hello world</div>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, hic.</p>
+                    <a class="justify-self-end align-self-end" href="">Read more <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div style="
+            position: fixed;
+            bottom: 1em;
+            right: 0;
+            height: 35px;
+            font-size: 1.5em;
+            width: auto; /* Adjust as needed */
+            padding: 0 6px; /* Optional, for some spacing */
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        ">
+            <i class="bi bi-plus-circle-fill"></i>
+        </div> -->
+
+    </main>
+
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <script src="js/user.js"></script>
     
+    <script>
+        (async () => {
+            try {
+                const user = await getUser();
+                document.getElementById('username').innerHTML = user.username;
+                document.getElementById('email').innerHTML = user.email;
+            } catch (error) {
+                console.log(
+                    error
+                )
+            }
+        })();
+    </script>
 </body>
 </html>
