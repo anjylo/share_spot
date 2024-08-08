@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link href="/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <title>Register</title>
+</head>
+<style>
+    :root {
+        --custom: #13547a
+    }
+    .text-custom {
+        color: var(--custom);
+    }
+    .bg-custom {
+        background-color: var(--custom);
+    }
+    .card-custom {
+        width: 820px;
+        height: 445px;
+    }
+</style>
+<body class="bg-custom">
+    <div class="container-fluid d-flex justify-content-center align-items-center vh-100">
+        <div class="card card-custom p-4 d-flex justify-content-center">
+            <div class="row g-0">
+                <div class="col-sm-6">
+                    <div class="d-flex flex-column justify-content-center h-100 pl-4">
+                        <h1 class="card-title text-center">Share<span class="text-custom">Spot</span></h1>
+                        <p class="card-text d-none d-sm-block">Express thoughts. Explore possibilities. Connect worlds.</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <h5 class="card-title">Register</h5>
+
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" placeholder="Enter email...">
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" placeholder="Enter username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" placeholder="Enter password">
+                        </div>
+            
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="return registerUser(event)">Sign Up</button>
+                            <a href="/login">Sign In <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function registerUser(event) {
+            event.preventDefault();
+            
+            const form = document.querySelector('form');
+
+            const email = form.email.value;
+            const username = form.username.value;
+            const password = form.password.value;
+            
+            if (! email || ! username || ! password ) {
+                window.alert('Fields cannot be empty');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/user/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, username, password })
+                });
+
+                const data = await response.json();
+                
+                if (
+                    response.ok && 
+                    response.status === 201
+                ) {
+                    window.location.href = '/home';
+                } else {
+                    window.alert(Object.values(data.errors).map(error => error).join('\n'));
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    </script>
+</body>
+
+</html>
