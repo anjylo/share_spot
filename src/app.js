@@ -22,7 +22,12 @@ app.use('/bootstrap-icons', express.static('./node_modules/bootstrap-icons'));
 
 (async () => {
     try {
+        const uri = 'mongodb://mongo:27017/app';
         const port = 3000;
+        
+        await mongoose.connect(uri);
+        
+        console.log('Database connected');
         
         app.listen(port, () => console.log(`Server running on port ${port}`));
     
