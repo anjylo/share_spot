@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const index = (request, response) => {
-    response.sendFile(path.join(__dirname, '..', 'public', 'user.html'));
+    response.sendFile(path.join(__dirname, '..', 'public', 'user', 'user.html'));
 }
 
 const getUsers = async (request, response) => {
@@ -125,12 +125,6 @@ const createUser = async (request, response) => {
 const updateUser = async (request, response) => {
     const id = request.body.id ? request.body.id : (tokenUtils.validate(request.cookies.token)).id;
 
-    const data = { 
-        email: request.body.email, 
-        username: request.body.username, 
-        password: request.body.password
-    }
-
     if (!mongooseUtils.isValidObjectId(id)) {
         return response.status(500).json({
             status: 'error',
@@ -142,23 +136,38 @@ const updateUser = async (request, response) => {
     try {
         const objId = mongooseUtils.toValidObjectId(id);
 
-        if (await User.exists({ $and: [{_id: { $ne: objId }}, { email: data.email }] })) {
-            return response.status(500).json({
+        const duplicate = await User.findOne({
+            $and: [
+                { _id: { $ne: objId } },
+                {
+                    $or: [
+                        { email: request.body.email },
+                        { username: request.body.username }
+                    ]
+                }
+            ]
+        });
+        
+        if (duplicate) {
+            let errors = [];
+
+            if (duplicate.email === request.body.email) errors.push('Email already taken');
+            if (duplicate.username === request.body.username) errors.push('Username already taken');
+       
+            return response.status(400).json({
                 status: 'error',
-                message: 'an error has occured',
-                errors: {'message': 'Email already taken'}
+                message: 'An error has occurred',
+                errors: errors
             });
         }
 
-        if (await User.exists({ $and: [{_id: { $ne: objId }}, { username: data.username }] })) {
-            return response.status(500).json({
-                status: 'error',
-                message: 'an error has occured',
-                errors: {'message': 'Username already taken'}
-            });
-        }
+        const data = {}
 
-        const options = { runValidators: true }
+        if (request.body.email) data.email = request.body.email;
+        if (request.body.username) data.username = request.body.username;
+        if (request.body.password) data.password = request.body.password;
+
+        const options = { runValidators: true };
         const user = await User.findByIdAndUpdate(id, data, options);
 
         if (!user) {

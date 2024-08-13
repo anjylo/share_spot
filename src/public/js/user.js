@@ -26,22 +26,29 @@ const setUser = async (event) => {
         const username = form.username.value;
         const password = form.password.value;
         
-        if (! email || ! username || ! password ) {
-            window.alert('Fields cannot be empty');
+        if (! email || ! username) {
+            window.alert('Username and Email cannot be empty');
             return;
         }
 
-        const request = await fetch('/api/user', {
+        const response = await fetch('/api/user', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, username, password })
         });
         
-        const response = await request.json();
+        const data = await response.json();
 
-        window.alert('Update complete');
+        if (
+            response.ok && 
+            response.status === 200
+        ) {
+            window.alert('Update complete');
+        } else {
+            window.alert(Object.values(data.errors).map(error => error).join('\n'));
+        }
 
-        return response.data;
+        return data.data;
 
     } catch (error) {
         return error
