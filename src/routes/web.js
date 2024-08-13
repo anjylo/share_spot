@@ -9,6 +9,6 @@ const router = Router();
 
 router.get('/register', authenticate, registerController.index);
 router.get('/login', authenticate, authController.index);
-router.get('/user', authenticate, userController.index)
+router.get('/user/setting', authenticate, userController.index)
 
 export default router;
