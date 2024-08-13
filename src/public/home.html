@@ -16,20 +16,35 @@
     .text-custom {
         color: var(--custom);
     }
-    .card-custom {
-        width: 14.2em;
-    }
 </style>
 <body>
     <header>
-        <nav class="navbar border-bottom border-body mb-4" data-bs-theme="dark">
-            <div class="container-fluid">
-                <h4 class="card-title text-center m-0">Share<span class="text-custom">Spot</span></h4>
-                <a class="" href="/api/logout">
-                    Logout
-                </a>
+        <nav class="navbar border-bottom border-body mb-4">
+            <div class="container-fluid d-flex align-items-center">
+                <h4 class="m-0">
+                    Share<span class="text-custom">Spot</span>
+                </h4>
+                <div class="btn-group justify-self-end">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                        <i class="bi bi-person-circle h4"></i>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 220px">
+                        <li>
+                            <span class="dropdown-item-text">
+                                <div class="d-flex justify-content-between">
+                                    <a href=""><span class="font-weight-bold text-capitalize" id="username"></span></a>
+                                    <a href="/user/setting"><i class="bi bi-gear text-muted"></i></a>
+                                </div>
+                            </span>
+                        </li>
+                        <li><span class="dropdown-item-text font-italic text-muted" id="email"></span></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item text-center"><a class="text-danger" href="/api/logout">logout</a></li>
+                    </ul>
+                </div>
             </div>
-          </nav>
+        </nav>
     </header>
 
     <!-- Modal -->
@@ -56,26 +71,11 @@
     </div> -->
 
     <main>
-        <div class="row mx-4">
-            <div class="col-auto pe-0 d-none d-md-block">
-                <div class="card card-custom p-3">
-                    <div class="d-flex flex-column">
-                        <img src="img/bust.jpg" class="align-self-center rounded img-fluid" id="picture">
-                        <a href="/user">
-                            <div class="card-title mt-2 mb-0 font-weight-bold text-capitalize" id="username"></div>
-                        </a>
-                        <div class="card-text font-italic text-muted" id="email"></div>
-
-                        <!-- <div>
-                            <a href="#">View Posts</a> | <a href="#"><i class="bi bi-plus-circle-fill"></i></a>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card d-flex px-3 py-2 mb-2">
+        <div class="container-sm">
+            <div class="d-flex justify-content-center">
+                <div class="card px-3 py-2 mb-2" style="max-width: 500px;">
                     <div class="card-title font-weight-bold text-capitalize m-0">Hello world</div>
-                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, hic.</p>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut exercitationellendus vitae, nihil debitis?</p>
                     <a class="justify-self-end align-self-end" href="">Read more <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
@@ -99,7 +99,7 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
 
-    <script src="js/user.js"></script>
+    <script src="/js/user.js"></script>
     
     <script>
         (async () => {

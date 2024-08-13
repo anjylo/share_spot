@@ -24,20 +24,38 @@
         background-color: #fff;
     }
     .card-custom {
-        width: 720px;
+        width: 600px;
         height: 400px;
     }
 </style>
 <body class="bg-custom">
     <header>
         <nav class="navbar border-bottom border-body mb-4 bg-nav-custom">
-            <div class="container-fluid">
-                <h4 class="card-title text-center m-0">Share<span class="text-custom">Spot</span></h4>
-                <a class="" href="/api/logout">
-                    Logout
-                </a>
+            <div class="container-fluid d-flex align-items-center">
+                <h4 class="m-0">
+                    Share<span class="text-custom">Spot</span>
+                </h4>
+                <div class="btn-group justify-self-end">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                        <i class="bi bi-person-circle h4"></i>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 220px">
+                        <li>
+                            <span class="dropdown-item-text">
+                                <div class="d-flex justify-content-between">
+                                    <a href=""><span class="font-weight-bold text-capitalize" id="username"></span></a>
+                                    <a href="/user/setting"><i class="bi bi-gear text-muted"></i></a>
+                                </div>
+                            </span>
+                        </li>
+                        <li><span class="dropdown-item-text font-italic text-muted" id="email"></span></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item text-center"><a class="text-danger" href="/api/logout">logout</a></li>
+                    </ul>
+                </div>
             </div>
-          </nav>
+        </nav>
     </header>
 
     <main>
@@ -70,7 +88,7 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
 
-    <script src="js/user.js"></script>
+    <script src="/js/user.js"></script>
     
     <script>
         (async () => {
@@ -81,6 +99,9 @@
 
                 const email = form.email.value = response.email;
                 const username = form.username.value = response.username;
+
+                document.getElementById('username').innerHTML = response.username;
+                document.getElementById('email').innerHTML = response.email;
 
             } catch (error) {
                 console.log(
