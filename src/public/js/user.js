@@ -7,7 +7,7 @@ const createUser = async (event) => {
     const username = form.username.value;
     const password = form.password.value;
     
-    if (! email || ! username || ! password ) {
+    if (! email.trim() || ! username.trim() || ! password.trim() ) {
         window.alert('Fields cannot be empty');
         return;
     }
@@ -62,7 +62,7 @@ const setUser = async (event) => {
         const username = form.username.value;
         const password = form.password.value;
         
-        if (! email || ! username) {
+        if (! email.trim() || ! username.trim()) {
             window.alert('Username and Email cannot be empty');
             return;
         }
