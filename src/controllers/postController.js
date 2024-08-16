@@ -14,15 +14,7 @@ const createPost = async (request, response) => {
             });
         }
 
-        if (!mongooseUtils.isValidObjectId(tokenId)) {
-            return response.status(500).json({
-                status: 'error',
-                message: 'An error has occurred',
-                error: 'Invalid object id'
-            });
-        }
-
-        request.body.user = mongooseUtils.toValidObjectId(tokenId);
+        request.body.user = tokenId
         
         const post = new Post(request.body);
         
@@ -114,14 +106,6 @@ const getPost = async (request, response) => {
 const updatePost = async (request, response) => {
     const id = request.body.id;
 
-    const data = { 
-        title: request.body.title, 
-        content: request.body.content, 
-        tags: request.body.tags 
-    }
-
-    const options = { runValidators: true }
-
     if (!mongooseUtils.isValidObjectId(id)) {
         return response.status(500).json({
             status: 'error',
@@ -131,6 +115,14 @@ const updatePost = async (request, response) => {
     }
 
     try {
+        const data = { 
+            title: request.body.title, 
+            content: request.body.content, 
+            tags: request.body.tags 
+        }
+    
+        const options = { runValidators: true }
+        
         const post = await Post.findByIdAndUpdate(id, data, options);
 
         if (!post) {
