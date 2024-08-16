@@ -1,0 +1,11 @@
+.post-modal {
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+    height: 35px;
+    font-size: 2em;
+    width: auto; 
+    padding: 0 6px;
+    box-sizing: border-box;
+    cursor: pointer;
+}

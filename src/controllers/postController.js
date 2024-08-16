@@ -1,9 +1,29 @@
 import Post from '../collections/post.js';
 import * as mongooseUtils from '../utils/mongoose.js';
-// import * as tokenUtils from '../utils/token.js';
+import * as tokenUtils from '../utils/token.js';
 
 const createPost = async (request, response) => {
     try {
+        const tokenId = (tokenUtils.validate(request.cookies.token)).id;
+
+        if (!tokenId) {
+            return response.status(500).json({
+                status: 'error',
+                message: 'An error has occurred',
+                error: 'Invalid session token'
+            });
+        }
+
+        if (!mongooseUtils.isValidObjectId(tokenId)) {
+            return response.status(500).json({
+                status: 'error',
+                message: 'An error has occurred',
+                error: 'Invalid object id'
+            });
+        }
+
+        request.body.user = mongooseUtils.toValidObjectId(tokenId);
+        
         const post = new Post(request.body);
         
         const validation = post.validateSync();

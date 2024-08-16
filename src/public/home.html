@@ -7,6 +7,8 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
     <link href="/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="/css/post.css">
+
     <title>Home</title>
 </head>
 <style>
@@ -47,28 +49,33 @@
         </nav>
     </header>
 
-    <!-- Modal -->
-    <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Launch demo modal
-    </button>
-  
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            ...
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+    <div class="modal fade" id="post" tabindex="-1" aria-labelledby="postLabel" aria-hidden="true">
+        <div class="modal-dialog container-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="postLabel">Post</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" placeholder="Enter Title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea class="form-control" name="content" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="return createPost(event)">Post</button>
+                </div>
             </div>
         </div>
-        </div>
-    </div> -->
+    </div>
 
     <main>
         <div class="container-sm">
@@ -80,26 +87,17 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div style="
-            position: fixed;
-            bottom: 1em;
-            right: 0;
-            height: 35px;
-            font-size: 1.5em;
-            width: auto; /* Adjust as needed */
-            padding: 0 6px; /* Optional, for some spacing */
-            box-sizing: border-box; /* Ensures padding doesn't affect width */
-        ">
-            <i class="bi bi-plus-circle-fill"></i>
-        </div> -->
-
+        
+        <div class="post-modal">
+            <i class="bi bi-plus-circle-fill" data-bs-toggle="modal" data-bs-target="#post"></i>
+        </div>
     </main>
 
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
 
     <script src="/js/user.js"></script>
+    <script src="/js/post.js"></script>
     
     <script>
         (async () => {
