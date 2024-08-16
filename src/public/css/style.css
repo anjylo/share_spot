@@ -1,0 +1,9 @@
+:root {
+    --branding: #13547a
+}
+.branding--text {
+    color: var(--branding);
+}
+.branding--bg {
+    background-color: var(--branding);
+}
