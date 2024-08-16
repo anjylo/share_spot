@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
     <link href="/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="/css/style.css">
 
     <title>User</title>
@@ -84,14 +84,13 @@
             try {
                 const response = await getUser();
                 
-                const form = document.querySelector('form');
-
-                const email = form.email.value = response.email;
-                const username = form.username.value = response.username;
-
                 document.getElementById('username').innerHTML = response.username;
                 document.getElementById('email').innerHTML = response.email;
 
+                const form = document.querySelector('form');
+                const email = form.email.value = response.email;
+                const username = form.username.value = response.username;
+                
             } catch (error) {
                 console.log(
                     error
