@@ -12,6 +12,10 @@ const index = (request, response) => {
     response.sendFile(path.join(__dirname, '..', 'public', 'user', 'user.html'));
 }
 
+const profile = (request, response) => {
+    response.sendFile(path.join(__dirname, '..', 'public', 'user', 'profile.html'));
+}
+
 const getUsers = async (request, response) => {
     try {
         const users = await User.find();
@@ -205,6 +209,7 @@ const updateUser = async (request, response) => {
 
 export {
     index,
+    profile,
     getUsers,
     getUser,
     createUser,

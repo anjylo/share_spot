@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link href="/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+    <title>Home</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar border-bottom border-body mb-4">
+            <div class="container-fluid d-flex align-items-center">
+                <h4 class="m-0">
+                    Share<span class="branding--text">Spot</span>
+                </h4>
+                <div class="btn-group justify-self-end">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                        <i class="bi bi-person-circle h4"></i>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 220px">
+                        <li>
+                            <span class="dropdown-item-text">
+                                <div class="d-flex justify-content-between">
+                                    <a href="/user/profile"><span class="font-weight-bold text-capitalize" id="username"></span></a>
+                                    <a href="/user/setting"><i class="bi bi-gear text-muted"></i></a>
+                                </div>
+                            </span>
+                        </li>
+                        <li><span class="dropdown-item-text font-italic text-muted" id="email"></span></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item text-center"><a class="text-danger" href="/api/logout">logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="modal fade" id="post" tabindex="-1" aria-labelledby="postLabel" aria-hidden="true">
+        <div class="modal-dialog container-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="postLabel">Post</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" placeholder="Enter Title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea class="form-control" name="content" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="return createPost(event)">Post</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <div class="container-sm">
+            <div class="d-flex flex-column align-items-center" id="posts">
+                
+            </div>
+        </div>
+        
+        <div class="post-modal">
+            <i class="bi bi-plus-circle-fill" data-bs-toggle="modal" data-bs-target="#post"></i>
+        </div>
+    </main>
+
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/js/user.js"></script>
+    <script src="/js/post.js"></script>
+    
+    <script>
+        (async () => {
+            const container = document.getElementById('posts');
+            const usernameElement = document.getElementById('username');
+            const emailElement = document.getElementById('email');
+            
+            let user;
+
+            const injectPosts = (posts) => {
+                const postHTML = posts.map(post => `
+                    <div class="card px-3 py-2 mb-2" style="width: 500px;">
+                        <div class="card-title font-weight-bold text-capitalize m-0">${post.title}</div>
+                        <p class="card-text">${post.content}</p>
+                        <a class="justify-self-end align-self-end" href="/post/${post._id}" target="_blank">
+                            Read more <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                `).join('');
+                container.innerHTML += postHTML;
+            };
+
+            const fetchPosts = async () => {
+                const count = container.childElementCount;
+                const posts = await getPosts(user.id, count);
+
+                injectPosts(posts);
+            };
+
+            const loadInitialData = async () => {
+                try {
+                    user = await getUser();
+
+                    usernameElement.innerHTML = user.username;
+                    emailElement.innerHTML = user.email;
+
+                    injectPosts(await getPosts(user.id, 0));
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+
+            const handleScroll = () => {
+                if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
+                    fetchPosts();
+                }
+            };
+
+            window.addEventListener('scroll', handleScroll);
+
+            await loadInitialData();
+        })();
+    </script>
+</body>
+</html>

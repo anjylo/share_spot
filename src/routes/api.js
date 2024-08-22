@@ -18,7 +18,7 @@ router.get('/user', authenticate, userController.getUser);
 router.put('/user', authenticate, userController.updateUser);
 
 // Post
-router.get('/posts', authenticate, postController.getPosts);
+router.get('/posts/:id?/:offset?', authenticate, postController.getPosts);
 router.get('/post', authenticate, postController.getPost);
 router.post('/post', authenticate, postController.createPost);
 router.put('/post', authenticate, postController.updatePost);

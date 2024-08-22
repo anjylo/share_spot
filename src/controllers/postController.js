@@ -2,6 +2,16 @@ import Post from '../collections/post.js';
 import * as mongooseUtils from '../utils/mongoose.js';
 import * as tokenUtils from '../utils/token.js';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const index = async (request, response) => {
+    response.sendFile(path.join(__dirname, '..', 'public', 'post', 'post.html'));
+}
+
 const createPost = async (request, response) => {
     try {
         const tokenId = (tokenUtils.validate(request.cookies.token)).id;
@@ -47,7 +57,13 @@ const createPost = async (request, response) => {
 
 const getPosts = async (request, response) => {
     try {
-        const posts = await Post.find();
+        const user = request.query.id;
+        const offset = request.query.offset || 0;
+        const limit = 10
+
+        const condition = user ? { user } : {}
+
+        const posts = await Post.find(condition).skip(offset).limit(limit);
 
         return response.json({
             data: posts
@@ -56,7 +72,7 @@ const getPosts = async (request, response) => {
         return response.status(500).json({
             status: 'error',
             message: 'an error has occured',
-            errors: error
+            errors: error.message
         });
     }
 }
@@ -185,6 +201,7 @@ const deletePost = async (request, response) => {
 }
 
 export {
+    index,
     createPost,
     getPosts,
     getPost,

@@ -28,7 +28,7 @@
                         <li>
                             <span class="dropdown-item-text">
                                 <div class="d-flex justify-content-between">
-                                    <a href=""><span class="font-weight-bold text-capitalize" id="username"></span></a>
+                                    <a href="/user/profile"><span class="font-weight-bold text-capitalize" id="username"></span></a>
                                     <a href="/user/setting"><i class="bi bi-gear text-muted"></i></a>
                                 </div>
                             </span>
@@ -72,12 +72,8 @@
 
     <main>
         <div class="container-sm">
-            <div class="d-flex justify-content-center">
-                <div class="card px-3 py-2 mb-2" style="max-width: 500px;">
-                    <div class="card-title font-weight-bold text-capitalize m-0">Hello world</div>
-                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut exercitationellendus vitae, nihil debitis?</p>
-                    <a class="justify-self-end align-self-end" href="">Read more <i class="bi bi-arrow-right"></i></a>
-                </div>
+            <div class="d-flex flex-column align-items-center" id="posts">
+                
             </div>
         </div>
         
@@ -94,15 +90,49 @@
     
     <script>
         (async () => {
-            try {
-                const user = await getUser();
-                document.getElementById('username').innerHTML = user.username;
-                document.getElementById('email').innerHTML = user.email;
-            } catch (error) {
-                console.log(
-                    error
-                )
-            }
+            const container = document.getElementById('posts');
+            const usernameElement = document.getElementById('username');
+            const emailElement = document.getElementById('email');
+
+            const injectPosts = (posts) => {
+                const postHTML = posts.map(post => `
+                    <div class="card px-3 py-2 mb-2" style="width: 500px;">
+                        <div class="card-title font-weight-bold text-capitalize m-0">${post.title}</div>
+                        <p class="card-text">${post.content}</p>
+                        <a class="justify-self-end align-self-end" href="/post/${post._id}" target="_blank">
+                            Read more <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                `).join('');
+                container.innerHTML += postHTML;
+            };
+
+            const fetchPosts = async () => {
+                const count = container.childElementCount;
+                const posts = await getPosts('', count);
+                injectPosts(posts);
+            };
+
+            const loadInitialData = async () => {
+                try {
+                    const [user, posts] = await Promise.all([getUser(), getPosts()]);
+                    usernameElement.innerHTML = user.username;
+                    emailElement.innerHTML = user.email;
+                    injectPosts(posts);
+                } catch (error) {
+                    console.error(error);
+                }
+            };
+
+            const handleScroll = () => {
+                if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
+                    fetchPosts();
+                }
+            };
+
+            window.addEventListener('scroll', handleScroll);
+
+            await loadInitialData();
         })();
     </script>
 </body>

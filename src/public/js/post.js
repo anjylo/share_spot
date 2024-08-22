@@ -40,3 +40,18 @@ const createPost = async (event) => {
         console.log(error)
     }
 }
+
+const getPosts = async (id = '', offset = 0) => {
+    const request = await fetch(`/api/posts/?id=${id}&offset=${offset}`, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const response = await request.json();
+
+    console.log(response);
+
+    return response.data;
+}
