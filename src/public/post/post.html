@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link href="/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+    <title>Post</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar border-bottom border-body mb-2">
+            <div class="container-fluid d-flex align-items-center">
+                <h4 class="m-0">
+                    Share<span class="branding--text">Spot</span>
+                </h4>
+                <div class="btn-group justify-self-end">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                        <i class="bi bi-person-circle h4"></i>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end" style="min-width: 220px">
+                        <li>
+                            <span class="dropdown-item-text">
+                                <div class="d-flex justify-content-between">
+                                    <a href="/user/profile"><span class="font-weight-bold text-capitalize" id="username"></span></a>
+                                    <a href="/user/setting"><i class="bi bi-gear text-muted"></i></a>
+                                </div>
+                            </span>
+                        </li>
+                        <li><span class="dropdown-item-text font-italic text-muted" id="email"></span></li>
+                        <li class="dropdown-divider"></li>
+                        <li class="dropdown-item text-center"><a class="text-danger" href="/api/logout">logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container-sm">
+            <div class="d-flex flex-column align-items-center" id="posts">
+                <div class="card px-3 py-2 mb-2" style="width: 500px;">
+                    <div>
+                        <span class="text-muted" id="user"></span>
+                        <div class="card-title font-weight-bold text-capitalize m-0" id="title"></div>
+                        <p class="card-text" id="content"></p>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <span class="text-muted" id="posted_at"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/js/user.js"></script>
+    <script src="/js/post.js"></script>
+    
+    <script>
+        (async () => {
+            try {
+                const urlPath = window.location.pathname;
+                const id = urlPath.split('/').pop();
+
+                const [user, post] = await Promise.all([getUser(), getPost(id)])
+                
+                document.getElementById('username').innerHTML = user.username;
+                document.getElementById('email').innerHTML = user.email;
+                
+                document.getElementById('user').innerHTML = post.user
+                document.getElementById('title').innerHTML = post.title
+                document.getElementById('content').innerHTML = post.content
+                document.getElementById('posted_at').innerHTML = `Created at ${post.createdAt}`
+
+            } catch (error) {
+                console.log(
+                    error
+                )
+            }
+        })();
+    </script>
+</body>
+</html>

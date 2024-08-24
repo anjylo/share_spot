@@ -58,6 +58,23 @@ const getPosts = async (id = '', offset = 0) => {
     }
 }
 
+const getPost = async (id) => {
+    try {
+        const request = await fetch(`/api/post/${id}`, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const response = await request.json();
+    
+        return response.data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 const deletePost = async (id) => {
     const response = await fetch (`/api/post/${id}`, {
         method: 'DELETE',

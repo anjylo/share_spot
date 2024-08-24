@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import Post from '../collections/post.js';
 import * as mongooseUtils from '../utils/mongoose.js';
 import * as tokenUtils from '../utils/token.js';
@@ -78,8 +80,8 @@ const getPosts = async (request, response) => {
 }
 
 const getPost = async (request, response) => {
-    const id = request.body.id;
-
+    const id = request.params.id;
+    
     if (!mongooseUtils.isValidObjectId(id)) {
         return response.status(500).json({
             status: 'error',
@@ -89,8 +91,8 @@ const getPost = async (request, response) => {
     }
 
    try {
-        const post = await Post.findById({ _id: id });
-
+        const post = await Post.findById({ _id: id }).populate('user');
+        
         if (!post) {
             return response.status(400).json({
                 status: 'error',
@@ -103,11 +105,11 @@ const getPost = async (request, response) => {
             status: 'success',
             message: 'Post fetched',
             data: {
-                email: post.title,
+                user: post.user.username,
+                title: post.title,
                 content: post.content,
                 tags: post.tags,
-                createdAt: post.createdAt,
-                updatedAt: post.updatedAt
+                createdAt: dayjs(post.createdAt).format('MM/DD/YYYY')
             }
         });
    } catch (error) {

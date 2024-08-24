@@ -19,7 +19,7 @@ router.put('/user', authenticate, userController.updateUser);
 
 // Post
 router.get('/posts/:id?/:offset?', authenticate, postController.getPosts);
-router.get('/post', authenticate, postController.getPost);
+router.get('/post/:id', authenticate, postController.getPost);
 router.post('/post', authenticate, postController.createPost);
 router.put('/post', authenticate, postController.updatePost);
 router.delete('/post/:id', authenticate, postController.deletePost);
