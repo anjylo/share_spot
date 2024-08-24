@@ -174,7 +174,7 @@ const updatePost = async (request, response) => {
 }
 
 const deletePost = async (request, response) => {
-    const id = request.body.id;
+    const id = request.params.id;
 
     if (!mongooseUtils.isValidObjectId(id)) {
         return response.status(500).json({
@@ -186,7 +186,7 @@ const deletePost = async (request, response) => {
 
     try {
         await Post.findByIdAndDelete(id);
-            
+        
         return response.json({
             status: 'success',
             message: 'post deleted'

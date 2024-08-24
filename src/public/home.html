@@ -94,6 +94,8 @@
             const usernameElement = document.getElementById('username');
             const emailElement = document.getElementById('email');
 
+            let offset = 0;
+
             const injectPosts = (posts) => {
                 const postHTML = posts.map(post => `
                     <div class="card px-3 py-2 mb-2" style="width: 500px;">
@@ -108,8 +110,7 @@
             };
 
             const fetchPosts = async () => {
-                const count = container.childElementCount;
-                const posts = await getPosts('', count);
+                const posts = await getPosts('', offset);
                 injectPosts(posts);
             };
 
@@ -126,6 +127,7 @@
 
             const handleScroll = () => {
                 if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight) {
+                    offset += 10;
                     fetchPosts();
                 }
             };

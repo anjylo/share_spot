@@ -22,6 +22,6 @@ router.get('/posts/:id?/:offset?', authenticate, postController.getPosts);
 router.get('/post', authenticate, postController.getPost);
 router.post('/post', authenticate, postController.createPost);
 router.put('/post', authenticate, postController.updatePost);
-router.delete('/post', authenticate, postController.deletePost);
+router.delete('/post/:id', authenticate, postController.deletePost);
 
 export default router;

@@ -42,16 +42,40 @@ const createPost = async (event) => {
 }
 
 const getPosts = async (id = '', offset = 0) => {
-    const request = await fetch(`/api/posts/?id=${id}&offset=${offset}`, {
-        method: 'GET',
+    try {
+        const request = await fetch(`/api/posts/?id=${id}&offset=${offset}`, {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json'
+            }
+        });
+    
+        const response = await request.json();
+    
+        return response.data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const deletePost = async (id) => {
+    const response = await fetch (`/api/post/${id}`, {
+        method: 'DELETE',
         headers: { 
             'Content-Type': 'application/json'
         }
     });
 
-    const response = await request.json();
+    const data = await response.json();
 
-    console.log(response);
+    if (
+        response.ok && 
+        response.status === 200
+    ) {
+        window.alert('Post deleted');
+    } else {
+        window.alert(Object.values(data.errors).map(error => error).join('\n'));
+    }
 
-    return response.data;
-}
+    return data.data;
+} 
