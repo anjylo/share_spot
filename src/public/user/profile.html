@@ -104,29 +104,36 @@
             };
             
             const injectPosts = (posts) => {
-                container.innerHTML = ''; // Reset
+                const maxLength = 60;
+            
+                if (posts.length > 0) {
+                    container.innerHTML = '';
+    
+                    const postHTML = posts.map(post =>  {
+                        const content = post.content.length > maxLength ? post.content.slice(0, maxLength) + '...' : post.content
 
-                const postHTML = posts.map(post => `
-                    <div class="card px-3 py-2 mb-2" style="width: 500px;">
-                        <div class="d-flex justify-content-between">
-                            <div class="card-title font-weight-bold text-capitalize m-0">${post.title}</div>
-                            <i class="bi bi-x text-danger remove-post" data-id="${post._id}"></i>
-                        </div>
-                        <p class="card-text">${post.content}</p>
-                        <a class="justify-self-end align-self-end" href="/post/${post._id}" target="_blank">
-                            Read more <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                `).join('');
-                container.innerHTML += postHTML;
-
-                document.querySelectorAll('.remove-post').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const id = e.currentTarget.getAttribute('data-id');
-                        deletePost(id);
-                        fetchPosts();
+                        return `<div class="card px-3 py-2 mb-2" style="width: 500px;">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="card-title font-weight-bold text-capitalize m-0">${post.title}</div>
+                                        <i class="bi bi-x text-danger remove-post" data-id="${post._id}"></i>
+                                    </div>
+                                    <p class="card-text">${content}</p>
+                                    <a class="justify-self-end align-self-end" href="/post/${post._id}" target="_blank">
+                                        Read more <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            `;
+                    }).join('');
+                    container.innerHTML += postHTML;
+    
+                    document.querySelectorAll('.remove-post').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.currentTarget.getAttribute('data-id');
+                            deletePost(id);
+                            fetchPosts();
+                        });
                     });
-                });
+                }
             };
 
             const loadInitialData = async () => {
