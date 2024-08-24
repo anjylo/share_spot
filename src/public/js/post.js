@@ -1,10 +1,10 @@
-const resetForm = () => {
-    document.getElementsByName('title')[0].value = ''
-    document.getElementsByName('content')[0].value = ''
-}
-
 const createPost = async (event) => {
     event.preventDefault();
+
+    const resetForm = () => {
+        document.getElementsByName('title')[0].value = ''
+        document.getElementsByName('content')[0].value = ''
+    }
 
     try {
         const form = document.querySelector('form');
