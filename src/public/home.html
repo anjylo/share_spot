@@ -17,7 +17,9 @@
         <nav class="navbar border-bottom border-body mb-2">
             <div class="container-fluid d-flex align-items-center">
                 <h4 class="m-0">
-                    Share<span class="branding--text">Spot</span>
+                    <a href="/" class="brand">
+                        Share<span class="branding--text">Spot</span>
+                    </a>
                 </h4>
                 <div class="btn-group justify-self-end">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
@@ -97,24 +99,27 @@
 
         const injectPosts = (posts) => {
             const maxLength = 60;
-
-            container.innerHTML = ''
             
-            const postHTML = posts.map(post => {
-                const content = post.content.length > maxLength ? post.content.slice(0, maxLength) + '...' : post.content
-
-                return `
-                    <div class="card px-3 py-2 mb-2" style="width: 500px;">
-                        <div class="card-title font-weight-bold text-capitalize m-0">${post.title}</div>
-                        <p class="card-text">${content}</p>
-                        <a class="justify-self-end align-self-end" href="/post/${post._id}" target="_blank">
-                            Read more <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                `
-            }).join('');
-
-            container.innerHTML += postHTML;
+            if (posts.length > 0) {
+                container.innerHTML = ''
+                
+                const postHTML = posts.map(post => {
+                    const content = post.content.length > maxLength ? post.content.slice(0, maxLength) + '...' : post.content
+    
+                    return `
+                        <div class="card px-3 py-2 mb-2" style="width: 500px;">
+                            <div class="card-title font-weight-bold text-capitalize m-0">${post.title}</div>
+                            <p class="card-text">${content}</p>
+                            <a class="justify-self-end align-self-end" href="/post/${post._id}" target="_blank">
+                                Read more <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    `
+                }).join('');
+    
+                container.innerHTML += postHTML;
+            }
+            
         };
 
         const fetchPosts = async () => {

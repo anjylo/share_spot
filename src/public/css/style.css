@@ -7,3 +7,7 @@
 .branding--bg {
     background-color: var(--branding);
 }
+a.brand {
+    text-decoration: none;
+    color: inherit;
+}
