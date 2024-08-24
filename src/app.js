@@ -1,11 +1,10 @@
+import 'dotenv/config';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 import { authenticate } from './middlewares/authMiddleware.js';
-
 import web from './routes/web.js';
 import api from './routes/api.js';
 
@@ -36,14 +35,18 @@ app.use((request, response) => response.status(404).sendFile(path.join(__dirname
 
 (async () => {
     try {
-        const uri = 'mongodb://mongo:27017/app';
-        const port = 3000;
+        const DB_HOST = process.env.DB_HOST;
+        const DB_PORT = process.env.DB_PORT;
+        const DB_NAME = process.env.DB_NAME;
+        const DB_URI = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`;
         
-        await mongoose.connect(uri);
+        const APP_PORT = process.env.APP_PORT;
+        
+        await mongoose.connect(DB_URI);
         
         console.log('Database connected');
 
-        app.listen(port, () => console.log(`Server running on port ${port}`));
+        app.listen(APP_PORT, () => console.log(`Server running on port ${APP_PORT}`));
     
     } catch (error) {
         console.log(error);
