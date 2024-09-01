@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import http from "http";
+import { Server as SocketIOServer } from "socket.io";
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
@@ -12,6 +14,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+const server = http.createServer(app);
+const io = new SocketIOServer(server);
 
 // Configs
 app.use(express.static('src/public'));
@@ -23,6 +27,16 @@ app.use(cookieParser());
 app.use("/js", express.static("./node_modules/bootstrap/dist/js"));
 app.use("/css",express.static("./node_modules/bootstrap/dist/css"));
 app.use('/bootstrap-icons', express.static('./node_modules/bootstrap-icons'));
+// app.use("/socket.io", express.static("./node_modules/socket.io/client-dist"));
+
+// websocket
+io.on('connection', (socket) => {
+    console.log('a user connected');
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
 
 // Routes
 app.use(web);
@@ -46,7 +60,7 @@ app.use((request, response) => response.status(404).sendFile(path.join(__dirname
         
         console.log('Database connected');
 
-        app.listen(APP_PORT, () => console.log(`Server running on port ${APP_PORT}`));
+        server.listen(APP_PORT, () => console.log(`Server running on port ${APP_PORT}`));
     
     } catch (error) {
         console.log(error);
