@@ -3,13 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link href="/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+
     <title>Chat</title>
 </head>
 <body>
+    <main>
+        <div class="container-fluid m-3">
+            <div class="card p-3">
+                <div id="messages">
     
+                </div>
+            </div>
+
+            <form id="form">
+                <div class="mb-3">
+                    <textarea class="form-control" id="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </main>
+    
+    <script src="/js/user.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    
     <script>
         let socket = io();
+
+        let user = {};
+
+        const setupUser = async () => {
+            try {
+                user = await getUser();
+            } catch (error) {
+                console.log('something went wrong');
+            }
+        }
+
+        const setup = async () => {
+            await setupUser();
+            
+            socket.emit('link', user);
+
+            socket.on('link', (data) => {
+                let item = document.createElement('div');
+                
+                item.classList.add('font-italic', 'text-muted', 'text-center');
+                item.textContent = `${data.username} has joined`;
+
+                let messages = document.getElementById('messages');
+
+                messages.appendChild(item);
+            });
+
+            socket.on('unlink', (data) => {
+                let item = document.createElement('div');
+                
+                item.classList.add('font-italic', 'text-muted', 'text-center');
+                item.textContent = `${data.username} has left`;
+
+                let messages = document.getElementById('messages');
+
+                messages.appendChild(item);
+            });
+
+            // let messages = document.getElementById('messages');
+            // let form = document.getElementById('form');
+            // let input = document.getElementById('message');
+    
+            // form.addEventListener('submit', function(e) {
+            //     e.preventDefault();
+    
+            //     if (input.value) {
+            //         socket.emit('chat message', input.value);
+            //         input.value = '';
+            //     }
+            // });
+    
+            // socket.on('chat message', function(msg) {
+            //     let item = document.createElement('li');
+            //     item.textContent = msg;
+            //     messages.appendChild(item);
+            //     window.scrollTo(0, document.body.scrollHeight);
+            // });
+        }
+
+        setup();
+
     </script>
 </body>
 </html>
