@@ -11,9 +11,15 @@
 
     <title>Chat</title>
 </head>
+<style>
+    #messages {
+        min-height: 70vh;
+    }
+</style>
 <body>
     <main>
-        <div class="container-fluid m-3">
+        <div class="container-fluid my-3">
+            
             <div class="card p-3">
                 <div id="messages">
     
@@ -21,11 +27,12 @@
             </div>
 
             <form id="form">
-                <div class="mb-3">
+                <div class="my-3">
                     <textarea class="form-control" id="message" rows="3"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
+
         </div>
     </main>
     
@@ -34,7 +41,6 @@
     
     <script>
         let socket = io();
-
         let user = {};
 
         const setupUser = async () => {
@@ -45,52 +51,81 @@
             }
         }
 
-        const setup = async () => {
-            await setupUser();
-            
+        const setupChat = () => {
+            const form = document.getElementById('form');
+            const input = document.getElementById('message');
+    
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+    
+                if (input.value) {
+                    socket.emit('message', {'message': input.value, ...user});
+                    input.value = '';
+                }
+            });
+        }
+
+        const setupSocket = () => {
             socket.emit('link', user);
 
             socket.on('link', (data) => {
-                let item = document.createElement('div');
+                const messages = document.getElementById('messages');
+                const item = document.createElement('p');
                 
-                item.classList.add('font-italic', 'text-muted', 'text-center');
+                item.classList.add('fst-italic', 'text-muted', 'text-center', 'mb-1');
                 item.textContent = `${data.username} has joined`;
-
-                let messages = document.getElementById('messages');
 
                 messages.appendChild(item);
             });
 
             socket.on('unlink', (data) => {
-                let item = document.createElement('div');
+                const item = document.createElement('p');
+                const messages = document.getElementById('messages');
                 
-                item.classList.add('font-italic', 'text-muted', 'text-center');
+                item.classList.add('fst-italic', 'text-muted', 'text-center', 'mb-1');
                 item.textContent = `${data.username} has left`;
-
-                let messages = document.getElementById('messages');
 
                 messages.appendChild(item);
             });
+    
+            socket.on('message', function(data) {
+                const messages = document.getElementById('messages');
+                const container = document.createElement('div');
+                const message = document.createElement('div');
+                const sender = document.createElement('div');
 
-            // let messages = document.getElementById('messages');
-            // let form = document.getElementById('form');
-            // let input = document.getElementById('message');
-    
-            // form.addEventListener('submit', function(e) {
-            //     e.preventDefault();
-    
-            //     if (input.value) {
-            //         socket.emit('chat message', input.value);
-            //         input.value = '';
-            //     }
-            // });
-    
-            // socket.on('chat message', function(msg) {
-            //     let item = document.createElement('li');
-            //     item.textContent = msg;
-            //     messages.appendChild(item);
-            //     window.scrollTo(0, document.body.scrollHeight);
-            // });
+                message.classList.add('rounded', 'w-auto', 'text-break', 'p-2', 'd-inline-block', 'text-white');
+                message.textContent = data.message;
+
+                sender.classList.add('fst-italic', 'fw-light', 'fs-6');
+                sender.textContent = data.username;
+
+                container.classList.add('mb-1');
+                
+                if (data.id === user.id) {
+                    container.classList.add('text-end');
+                    sender.classList.add('text-end');
+                    message.classList.add('bg-primary');
+                } else {
+                    container.classList.add('text-start');
+                    sender.classList.add('text-start');
+                    message.classList.add('bg-secondary');
+                }
+
+                container.appendChild(message);
+                container.appendChild(sender);
+                messages.appendChild(container);
+                
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        }
+
+        const setup = async () => {
+            await setupUser();
+
+            setupSocket();
+            
+            setupChat();
         }
 
         setup();
