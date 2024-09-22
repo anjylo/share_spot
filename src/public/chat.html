@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link href="/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <title>Chat</title>
+</head>
+<style>
+    #messages {
+        min-height: 70vh;
+    }
+</style>
+<body>
+    <main>
+        <div class="container-fluid my-3">
+            
+            <div class="card p-3">
+                <div id="messages">
+    
+                </div>
+            </div>
+
+            <form id="form">
+                <div class="my-3">
+                    <textarea class="form-control" id="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
+        </div>
+    </main>
+    
+    <script src="/js/user.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <script>
+        let socket = io();
+        let user = {};
+
+        const setupUser = async () => {
+            try {
+                user = await getUser();
+            } catch (error) {
+                console.log('something went wrong');
+            }
+        }
+
+        const setupChat = () => {
+            const form = document.getElementById('form');
+            const input = document.getElementById('message');
+    
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+    
+                if (input.value) {
+                    socket.emit('message', {'message': input.value, ...user});
+                    input.value = '';
+                }
+            });
+        }
+
+        const setupSocket = () => {
+            socket.emit('link', user);
+
+            socket.on('link', (data) => {
+                const messages = document.getElementById('messages');
+                const item = document.createElement('p');
+                
+                item.classList.add('fst-italic', 'text-muted', 'text-center', 'mb-1');
+                item.textContent = `${data.username} has joined`;
+
+                messages.appendChild(item);
+            });
+
+            socket.on('unlink', (data) => {
+                const item = document.createElement('p');
+                const messages = document.getElementById('messages');
+                
+                item.classList.add('fst-italic', 'text-muted', 'text-center', 'mb-1');
+                item.textContent = `${data.username} has left`;
+
+                messages.appendChild(item);
+            });
+    
+            socket.on('message', function(data) {
+                const messages = document.getElementById('messages');
+                const container = document.createElement('div');
+                const message = document.createElement('div');
+                const sender = document.createElement('div');
+
+                message.classList.add('rounded', 'w-auto', 'text-break', 'p-2', 'd-inline-block', 'text-white');
+                message.textContent = data.message;
+
+                sender.classList.add('fst-italic', 'fw-light', 'fs-6');
+                sender.textContent = data.username;
+
+                container.classList.add('mb-1');
+                
+                if (data.id === user.id) {
+                    container.classList.add('text-end');
+                    sender.classList.add('text-end');
+                    message.classList.add('bg-primary');
+                } else {
+                    container.classList.add('text-start');
+                    sender.classList.add('text-start');
+                    message.classList.add('bg-secondary');
+                }
+
+                container.appendChild(message);
+                container.appendChild(sender);
+                messages.appendChild(container);
+                
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        }
+
+        const setup = async () => {
+            await setupUser();
+
+            setupSocket();
+            
+            setupChat();
+        }
+
+        setup();
+
+    </script>
+</body>
+</html>
